@@ -1,12 +1,11 @@
-from fastapi import Depends, FastAPI
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
 from . import models, schemas
 from .auth import create_access_token
-from .database import Base, engine, get_db
+# from .database import Base, engine, get_db
 from .routers import products, sales
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="FastAPI Inventory System",
@@ -24,7 +23,7 @@ def root():
 
 
 @app.post("/login")
-def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+def login(user: schemas.UserLogin):
     db_user = db.query(models.User).filter(models.User.username == user.username).first()
     if not db_user:
         db_user = models.User(username=user.username, password=user.password)
